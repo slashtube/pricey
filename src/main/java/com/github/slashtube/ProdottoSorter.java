@@ -17,8 +17,9 @@ public class ProdottoSorter {
     final private ArrayList<Prodotto> prodotti;
 
     ProdottoSorter(String descrizione, String fname, Double prezzo) {
-        this.descrizione = descrizione;
-        this.prodotti =  new ArrayList<>();
+        // In certi file le descrizioni incominciano con un punto, una virgola o uno spazio. Il regex le rimuove.
+        this.descrizione = descrizione.replaceAll("^(\s|[.,])*","");
+        this.prodotti = new ArrayList<>();
         this.prodotti.add(new Prodotto(fname, prezzo));
     }
 

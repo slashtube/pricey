@@ -12,6 +12,7 @@ public class Main {
     public static void main(String[] args) {
         ProdottoMap map = new ProdottoMap();
         HashMap<String, ProdottoSorter> Prodotti = map.getProdotti();
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
         String[] Files = FindFiles();
 
@@ -31,7 +32,7 @@ public class Main {
                             barcode = row.getCell(test.getColIdx(0)).getStringCellValue();
                             break;
                         case CellType.NUMERIC:
-                            barcode = Double.toString(row.getCell(test.getColIdx(0)).getNumericCellValue());
+                            barcode = String.format("%.0f",row.getCell(test.getColIdx(0)).getNumericCellValue());
                             break;
                         default:
                             barcode = null;
@@ -55,8 +56,8 @@ public class Main {
             }
         }
 
-
         map.WriteFile("Listino.xlsx");
+        
 
     }
 
