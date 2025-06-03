@@ -22,6 +22,8 @@ public class Listino {
     private final String fname; // Nome del file del listino
     private int[] colIndex; // indice delle colonne da confrontare (0 = BARCODE, 1 = descrizione, 2 = ivato)
     private int riemp;
+    private Sheet listino;
+    private int startrow;
 
     public Listino(String fname) {
         this.fname = fname;
@@ -42,9 +44,9 @@ public class Listino {
             if (wb == null) {
                 System.err.println("Estensione file non riconosciuta");
             } else {
-                Sheet sheet = wb.getSheetAt(0);
+                this.listino = wb.getSheetAt(0);
 
-                for (var rows : sheet) {
+                for (var rows : listino) {
                     for (var cell : rows) {
                         if (cell != null && cell.getCellType() == CellType.STRING) {
                             switch (cell.getStringCellValue().toLowerCase()) {
@@ -69,7 +71,7 @@ public class Listino {
                     }
 
                     if (riemp >= 2) {
-                        System.out.println(rows.getCell(this.colIndex[0]).getStringCellValue());
+                        this.startrow = rows.getRowNum();
                         break;
                     }
                 }
@@ -96,6 +98,14 @@ public class Listino {
 
     public int getColIdx(int index) {
         return this.colIndex[index];
+    }
+
+    public Sheet getListino() {
+        return this.listino;
+    }
+
+    public int getStartRow() {
+        return this.startrow;
     }
 
     @Override
