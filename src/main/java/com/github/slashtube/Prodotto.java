@@ -1,31 +1,43 @@
 package com.github.slashtube;
 
-import java.util.ArrayList;
-
 /**
-* La classe Prodotto serve per aggiungere un ulteriore livello di astrazione. 
+* La classe Prodotto serve per aggiungere un livello di astrazione. 
 * 
 * 
 * 
 * @author slashtube 
 * 
 */
-public class Prodotto {
-    private String descrizione;
-    private ArrayList<Double> prezzi;
 
-    Prodotto(String descrizione, Double prezzo) {
-        this.descrizione = descrizione;
-        this.prezzi =  new ArrayList<>();
-        this.prezzi.add(prezzo);
+
+public class Prodotto implements Comparable<Prodotto> {
+    final String fname;
+    final Double prezzo;
+
+    public Prodotto(String fname, Double prezzo) {
+        this.fname = fname;
+        this.prezzo = prezzo;
     }
 
-    public void appendPrezzo(Double prezzo) {
-        this.prezzi.add(prezzo);
+    public String getFname() {
+        return this.fname;
     }
 
-    public String getDescrizione() {
-        return this.descrizione;
+    public Double getPrezzo() {
+        return this.prezzo;
     }
+
+    @Override
+    public int compareTo(Prodotto p) {
+        if(this.prezzo.compareTo(p.prezzo) > 0) {
+            return 1;
+        } else if(this.prezzo.compareTo(p.prezzo) < 0){
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    
 
 }

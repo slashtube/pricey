@@ -10,20 +10,21 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
-* La classe Listino serve per parsare il file excel che poi sara' confrontato. 
-* Il costruttore si occupera' di individuare l'indice delle colonne che poi saranno confrontate dalla classe Comparator.
-* 
-* 
-* @author slashtube 
-* 
-*/
+ * La classe Listino serve per parsare il file excel.
+ * Il costruttore si occupera' di individuare l'indice delle colonne che
+ * necessarie per la comparazione.
+ * 
+ * 
+ * @author slashtube
+ * 
+ */
 
 public class Listino {
     private final String fname; // Nome del file del listino
     private int[] colIndex; // indice delle colonne da confrontare (0 = BARCODE, 1 = descrizione, 2 = ivato)
     private int riemp;
-    private Sheet listino;
-    private int startrow;
+    private int startrow; // Riga dalla quale incominciare a cercare i prodotti
+    private Sheet foglio;
 
     public Listino(String fname) {
         this.fname = fname;
@@ -31,6 +32,7 @@ public class Listino {
         this.riemp = 0;
 
         String extension = GetExtension(fname);
+
         // Cerca l'indice delle colonne per l'ivato, la descrizione e il codice a barre
         try (FileInputStream file = new FileInputStream(this.fname)) {
             Workbook wb = null;
@@ -44,9 +46,8 @@ public class Listino {
             if (wb == null) {
                 System.err.println("Estensione file non riconosciuta");
             } else {
-                this.listino = wb.getSheetAt(0);
-
-                for (var rows : listino) {
+                this.foglio = wb.getSheetAt(0);
+                for (var rows : foglio) {
                     for (var cell : rows) {
                         if (cell != null && cell.getCellType() == CellType.STRING) {
                             switch (cell.getStringCellValue().toLowerCase()) {
@@ -75,7 +76,6 @@ public class Listino {
                         break;
                     }
                 }
-                
 
             }
 
@@ -89,7 +89,6 @@ public class Listino {
         String extension = fname.split("[.]")[1];
 
         return extension.toLowerCase();
-
     }
 
     public String getFname() {
@@ -100,18 +99,13 @@ public class Listino {
         return this.colIndex[index];
     }
 
-    public Sheet getListino() {
-        return this.listino;
-    }
-
     public int getStartRow() {
         return this.startrow;
     }
 
-    @Override
-    public String toString() {
-        return String.format("Barcode: %d\nDescrizione: %d\nIvato: %d\n", this.colIndex[0], this.colIndex[1],
-                this.colIndex[2]);
+    public Sheet getFoglio() {
+        return this.foglio;
     }
+
 
 }
