@@ -90,10 +90,4 @@ public class ProdottoMap {
 
     }
 
-    private String GetExtension(String fname) {
-        String extension = fname.split("[.]")[1];
-
-        return extension.toLowerCase();
-    }
-
 }
