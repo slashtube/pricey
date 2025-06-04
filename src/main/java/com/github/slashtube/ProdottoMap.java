@@ -6,10 +6,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.apache.poi.common.usermodel.HyperlinkType;
-import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -50,13 +48,11 @@ public class ProdottoMap {
             foglio.setDefaultColumnStyle(1, style);
             foglio.setDefaultColumnStyle(2, style);
 
-
             // Riga principale
             Row row = foglio.createRow(i++);
             row.createCell(0).setCellValue("EAN");
             row.createCell(1).setCellValue("Descrizione");
             row.createCell(2).setCellValue("Ivato Minimo");
-
 
             for (var ean : Prodotti.keySet()) {
                 ProdottoSorter prodotto = Prodotti.get(ean);
@@ -72,25 +68,15 @@ public class ProdottoMap {
 
                 for (var p : prodotto.GetProdotti()) {
                     Double ivatomin = p.getPrezzo();
-                    Hyperlink hprlnk;
-                    switch (GetExtension(p.getFname())) {
-                        case "xlsx":
-                            hprlnk = new XSSFHyperlink(HyperlinkType.URL){};
-                            break;
-                        case "xls":
-                            hprlnk = new HSSFHyperlink(HyperlinkType.URL){};
-                            break;
-                        default:
-                            hprlnk = null;
-                            break;
-                    }
+                    XSSFHyperlink hprlnk = new XSSFHyperlink(HyperlinkType.URL) {};
+                    File f = new File("files/" + p.getFname());
 
-                    if(hprlnk != null) {
-                        File f = new File("files/" + p.getFname());
-                        hprlnk.setAddress(f.toURI().toString());
-                        row.createCell(j).setHyperlink(hprlnk);
-                    }
-                    row.createCell(j).setCellValue(String.format("%.2f",ivatomin));
+                    hprlnk.setAddress(f.toURI().toString());
+                    hprlnk.setTooltip(p.getFname());
+                    hprlnk.setLocation(p.getReference().formatAsString());
+
+                    row.createCell(j).setHyperlink(hprlnk);
+                    row.createCell(j).setCellValue(String.format("%.2f", ivatomin));
                     j++;
                 }
 

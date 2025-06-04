@@ -1,5 +1,7 @@
 package com.github.slashtube;
 
+import org.apache.poi.ss.util.CellReference;
+
 /**
 * La classe Prodotto serve per aggiungere un livello di astrazione. 
 * 
@@ -11,12 +13,15 @@ package com.github.slashtube;
 
 
 public class Prodotto implements Comparable<Prodotto> {
-    final String fname;
-    final Double prezzo;
+    private final String fname;
+    private final Double prezzo;
+    private final CellReference reference;
+    
 
-    public Prodotto(String fname, Double prezzo) {
+    public Prodotto(String fname, Double prezzo, int row, int col) {
         this.fname = fname;
         this.prezzo = prezzo;
+        this.reference = new CellReference(row, (short) col);
     }
 
     public String getFname() {
@@ -25,6 +30,10 @@ public class Prodotto implements Comparable<Prodotto> {
 
     public Double getPrezzo() {
         return this.prezzo;
+    }
+
+    public CellReference getReference() {
+        return this.reference;
     }
 
     @Override

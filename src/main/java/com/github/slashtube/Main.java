@@ -43,9 +43,9 @@ public class Main {
                         Double prezzo = row.getCell(test.getColIdx(2)).getNumericCellValue();
 
                         if (Prodotti.containsKey(barcode)) {
-                            Prodotti.get(barcode).appendProdotto(file, prezzo);
+                            Prodotti.get(barcode).appendProdotto(file, prezzo, row.getRowNum(), 0);
                         } else {
-                            ProdottoSorter p = new ProdottoSorter(descrizione, file, prezzo);
+                            ProdottoSorter p = new ProdottoSorter(descrizione, file, prezzo, row.getRowNum(), 0);
                             Prodotti.put(barcode, p);
                         }
                     }
