@@ -30,6 +30,9 @@ public class Listino {
         this.fname = fname;
         this.colIndex = new int[3];
         this.riemp = 0;
+        int codicealtcol = 0;
+        int prezzoaltcol = 0;
+
 
         String extension = GetExtension(fname);
 
@@ -51,6 +54,7 @@ public class Listino {
                     for (var cell : rows) {
                         if (cell != null && cell.getCellType() == CellType.STRING) {
                             switch (cell.getStringCellValue().toLowerCase()) {
+                                case "codice ean":
                                 case "ean":
                                 case "barcode":
                                     this.colIndex[0] = cell.getColumnIndex();
@@ -62,11 +66,17 @@ public class Listino {
                                     this.riemp++;
                                     break;
 
+                                case "prezzo offerta":
                                 case "ivato":
                                 case "ivato sc.":
                                     this.colIndex[2] = cell.getColumnIndex();
                                     this.riemp++;
                                     break;
+
+                                 case "codice":
+                                    codicealtcol = cell.getColumnIndex();
+                                    break;
+
                             }
                         }
                     }
@@ -75,6 +85,10 @@ public class Listino {
                         this.startrow = rows.getRowNum();
                         break;
                     }
+                }
+
+                if(this.colIndex[0] <= 0) {
+                    this.colIndex[0] = codicealtcol;
                 }
 
             }

@@ -5,6 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.showMessageDialog;
+
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -53,6 +56,7 @@ public class ProdottoMap {
             row.createCell(0).setCellValue("EAN");
             row.createCell(1).setCellValue("Descrizione");
             row.createCell(2).setCellValue("Ivato Minimo");
+            foglio.createRow(i++);
 
             for (var ean : Prodotti.keySet()) {
                 ProdottoSorter prodotto = Prodotti.get(ean);
@@ -85,7 +89,7 @@ public class ProdottoMap {
             wb.write(file);
 
         } catch (IOException e) {
-            System.err.println("Errore nell'apertura del file: " + e);
+            showMessageDialog(null, "Errore nella creazione del file", "Errore", ERROR_MESSAGE);
         }
 
     }
