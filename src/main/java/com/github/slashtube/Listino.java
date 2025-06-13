@@ -31,7 +31,6 @@ public class Listino {
         this.colIndex = new int[3];
         this.riemp = 0;
         int codicealtcol = 0;
-        int prezzoaltcol = 0;
 
 
         String extension = GetExtension(fname);
@@ -94,7 +93,7 @@ public class Listino {
             }
 
         } catch (IOException e) {
-            System.err.println("Errore nell'apertura del file: " + e);
+            System.err.println("Errore nell'apertura di uno dei file: " + e);
 
         }
     }

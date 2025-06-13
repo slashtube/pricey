@@ -2,6 +2,7 @@ package com.github.slashtube;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.HashMap;
 
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
@@ -46,9 +47,9 @@ public class Main {
                             Double prezzo = row.getCell(test.getColIdx(2)).getNumericCellValue();
 
                             if (Prodotti.containsKey(barcode)) {
-                                Prodotti.get(barcode).appendProdotto(file, prezzo, row.getRowNum(), 0);
+                                Prodotti.get(barcode).appendProdotto(file, descrizione, prezzo, row.getRowNum(), 0);
                             } else {
-                                ProdottoSorter p = new ProdottoSorter(descrizione, file, prezzo, row.getRowNum(), 0);
+                                ProdottoSorter p = new ProdottoSorter(descrizione, descrizione, file, prezzo, row.getRowNum(), 0);
                                 Prodotti.put(barcode, p);
                             }
                         }
@@ -59,13 +60,17 @@ public class Main {
                 }
             }
 
+            map.sortByValue();
             map.WriteFile("Listino.xlsx");
             showMessageDialog(null, "Operazione avvenuta con successo");
 
+        } catch (IOException e) {
+            showMessageDialog(null, "Errore nella creazione del file", "Errore", ERROR_MESSAGE);
         } catch (Exception e) {
-            System.out.println(e);
             showMessageDialog(null, "Errore", "Errore", ERROR_MESSAGE);
+            System.out.println(e);
         }
+
 
     }
 
@@ -76,5 +81,6 @@ public class Main {
 
         return dir.list(filter);
     }
+
 
 }
