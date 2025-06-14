@@ -109,7 +109,6 @@ public class ProdottoMap {
 
     // @reference: https://www.baeldung.com/java-hashmap-sort
     public void sortByValue() {
-        this.Prodotti.entrySet().stream().sorted(Map.Entry.comparingByValue());
         this.Prodotti = this.Prodotti.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue())
