@@ -8,12 +8,15 @@ import java.util.HashMap;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 public class Main {
     public static void main(String[] args) {
+        final Logger LOGGER = LogManager.getLogger();
         ProdottoMap map = new ProdottoMap();
         HashMap<String, ProdottoSorter> Prodotti = map.getProdotti();
 
@@ -22,34 +25,41 @@ public class Main {
 
             // for loop per ogni file
             for (var file : Files) {
-                Listino test = new Listino("files/" + file);
-                Sheet foglio = test.getFoglio();
-                int count = test.getStartRow() + 1;
+                final String filename = "files/" + file;
+                final Listino listino = new Listino(filename);
+                final Sheet foglio = listino.getFoglio();
+                int count = listino.getStartRow() + 1;
                 Row row = foglio.getRow(count++);
 
                 // Creazione mappa
+                final int barindx = listino.getColIdx(0);
                 String barcode;
+
                 while (row != null) {
-                    if (row.getCell(test.getColIdx(0)) != null) {
-                        switch (row.getCell(test.getColIdx(0)).getCellType()) {
+                    if (row.getCell(barindx) != null) {
+                        switch (row.getCell(barindx).getCellType()) {
                             case CellType.STRING:
-                                barcode = row.getCell(test.getColIdx(0)).getStringCellValue();
+                                barcode = row.getCell(listino.getColIdx(0)).getStringCellValue();
                                 break;
                             case CellType.NUMERIC:
-                                barcode = String.format("%.0f", row.getCell(test.getColIdx(0)).getNumericCellValue());
+                                barcode = String.format("%.0f",
+                                        row.getCell(listino.getColIdx(0)).getNumericCellValue());
                                 break;
                             default:
                                 barcode = null;
                         }
 
                         if (barcode != null) {
-                            String descrizione = row.getCell(test.getColIdx(1)).getStringCellValue();
-                            Double prezzo = row.getCell(test.getColIdx(2)).getNumericCellValue();
+                            final String descrizione = row.getCell(listino.getColIdx(1)).getStringCellValue();
+
+                            final int prezzoidx = listino.getColIdx(2);
+                            Double prezzo = row.getCell(prezzoidx).getNumericCellValue();
 
                             if (Prodotti.containsKey(barcode)) {
                                 Prodotti.get(barcode).appendProdotto(file, descrizione, prezzo, row.getRowNum(), 0);
                             } else {
-                                ProdottoSorter p = new ProdottoSorter(descrizione, descrizione, file, prezzo, row.getRowNum(), 0);
+                                ProdottoSorter p = new ProdottoSorter(descrizione, descrizione, file, prezzo,
+                                        row.getRowNum(), 0);
                                 Prodotti.put(barcode, p);
                             }
                         }
@@ -68,9 +78,8 @@ public class Main {
             showMessageDialog(null, "Errore nella creazione del file", "Errore", ERROR_MESSAGE);
         } catch (Exception e) {
             showMessageDialog(null, "Errore", "Errore", ERROR_MESSAGE);
-            System.out.println(e);
+            LOGGER.catching(e);
         }
-
 
     }
 
@@ -81,6 +90,5 @@ public class Main {
 
         return dir.list(filter);
     }
-
 
 }

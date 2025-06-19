@@ -32,6 +32,12 @@ public class Listino {
         this.riemp = 0;
         int codicealtcol = 0;
 
+        /*
+         * In certi file (depa) aggiungono piu' voci dell'ivato e nascondono quelli che
+         * non vengono utilizzati.
+         * L'idea e' quella di tenere conto solo della prima inserzione
+         */
+        int occ = 0;
 
         String extension = GetExtension(fname);
 
@@ -68,11 +74,15 @@ public class Listino {
                                 case "prezzo offerta":
                                 case "ivato":
                                 case "ivato sc.":
-                                    this.colIndex[2] = cell.getColumnIndex();
-                                    this.riemp++;
+                                    if (occ < 1) {
+                                        this.colIndex[2] = cell.getColumnIndex();
+                                        this.riemp++;
+                                        occ++;
+                                    }
+
                                     break;
 
-                                 case "codice":
+                                case "codice":
                                     codicealtcol = cell.getColumnIndex();
                                     break;
 
@@ -86,10 +96,10 @@ public class Listino {
                     }
                 }
 
-                if(this.colIndex[0] <= 0) {
+                if (this.colIndex[0] <= 0) {
                     this.colIndex[0] = codicealtcol;
                 }
-
+                wb.close();
             }
 
         } catch (IOException e) {
@@ -119,6 +129,5 @@ public class Listino {
     public Sheet getFoglio() {
         return this.foglio;
     }
-
 
 }
