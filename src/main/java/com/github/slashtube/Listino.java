@@ -35,7 +35,8 @@ public class Listino {
         /*
          * In certi file (depa) aggiungono piu' voci dell'ivato e nascondono quelli che
          * non vengono utilizzati.
-         * L'idea e' quella di tenere conto solo della prima inserzione
+         * L'idea e' quella di tenere conto solo della prima inserzione.
+         * Per questo, il programma tiene conto delle occorrenze.
          */
         int occ = 0;
 
@@ -45,6 +46,7 @@ public class Listino {
         try (FileInputStream file = new FileInputStream(this.fname)) {
             Workbook wb = null;
 
+            // Potevo usare una factory per rendere il codice piu' leggibile.
             if (extension.equals("xlsx")) {
                 wb = new XSSFWorkbook(file);
             } else if (extension.equals("xls")) {
@@ -71,15 +73,18 @@ public class Listino {
                                     this.riemp++;
                                     break;
 
-                                case "prezzo offerta":
+                                /*
+                                 * Ivato scontato e prezzo offerta, se esistono, sovrascrivono l'ivato trovato in precedenza.
+                                 */
                                 case "ivato":
+                                    if (occ >= 1) {
+                                        break;
+                                    }
+                                case "prezzo offerta":
                                 case "ivato sc.":
-                                    if (occ < 1) {
                                         this.colIndex[2] = cell.getColumnIndex();
                                         this.riemp++;
                                         occ++;
-                                    }
-
                                     break;
 
                                 case "codice":
@@ -90,12 +95,14 @@ public class Listino {
                         }
                     }
 
+                    // Termina l'esecuzione se il vettore degli indici e' pieno.
                     if (riemp >= 2) {
                         this.startrow = rows.getRowNum();
                         break;
                     }
                 }
 
+                // Se non viene trovata nessuna voce "ean" o "barcode", viene assegnato l'indice della voce "codice".
                 if (this.colIndex[0] <= 0) {
                     this.colIndex[0] = codicealtcol;
                 }

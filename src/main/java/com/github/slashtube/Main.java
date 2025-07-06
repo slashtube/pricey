@@ -52,6 +52,10 @@ public class Main {
                         if (barcode != null) {
                             final String descrizione = row.getCell(listino.getColIdx(1)).getStringCellValue();
 
+                            if(barcode.equals("") || barcode.equals("-")) {
+                                barcode = "Prodotto senza codice";
+                            }
+
                             final int prezzoidx = listino.getColIdx(2);
                             Double prezzo = row.getCell(prezzoidx).getNumericCellValue();
 

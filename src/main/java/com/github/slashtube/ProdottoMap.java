@@ -48,8 +48,9 @@ public class ProdottoMap {
             style.setFont(font);
 
             foglio.setDefaultColumnStyle(0, style);
-            foglio.setDefaultColumnStyle(1, style);
             foglio.setDefaultColumnStyle(2, style);
+            style.setAlignment(HorizontalAlignment.LEFT);
+            foglio.setDefaultColumnStyle(1, style);
 
             // Riga principale
             Row row = foglio.createRow(i++);
@@ -81,21 +82,19 @@ public class ProdottoMap {
                     hprlnk.setTooltip(p.getFname());
                     hprlnk.setLocation(p.getReference().formatAsString());
 
-                    if (ean.equals("") || ean.equals("-")) {
-                        row.createCell(0).setCellValue("Prodotto senza codice");
+                    row.createCell(0).setCellValue(ean);
+
+                    if (ean.equals("Prodotto senza codice")) {
                         row.createCell(1).setCellValue(p.getRelDescr());
                         row.createCell(2).setHyperlink(hprlnk);
                         row.createCell(2).setCellValue(String.format("%.2f", ivatomin));
 
                         row = foglio.createRow(i++);
-
                     } else {
-                        row.createCell(0).setCellValue(ean);
                         row.createCell(1).setCellValue(descrizione);
                         row.createCell(j).setHyperlink(hprlnk);
                         row.createCell(j).setCellValue(String.format("%.2f", ivatomin));
                         j++;
-
                     }
                 }
 
