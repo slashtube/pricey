@@ -1,7 +1,7 @@
 package com.github.slashtube.CatalogoManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.github.slashtube.ProdottoManager.OrdinaPerDescrizione;
 import com.github.slashtube.ProdottoManager.Prodotto;
@@ -17,13 +17,13 @@ public class Catalogo {
         return this.list;
     }
 
-    public ArrayList<Prodotto> getProdotti() {
-        ArrayList<Prodotto> prodotti = new ArrayList<>();
-        for(var prodotto : list.entrySet()) {
-            prodotti.add(prodotto.getValue());
-        }
+    public List<Prodotto> getProdotti() {
+        List<Prodotto> prodotti;
 
-        prodotti.sort(new OrdinaPerDescrizione());
+        prodotti = list.entrySet().stream()
+            .map(kv -> kv.getValue())
+            .sorted(new OrdinaPerDescrizione())
+            .toList();
 
         return prodotti;
     } 

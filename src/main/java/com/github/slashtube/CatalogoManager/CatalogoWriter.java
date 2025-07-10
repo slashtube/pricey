@@ -3,7 +3,7 @@ package com.github.slashtube.CatalogoManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -36,7 +36,7 @@ public class CatalogoWriter {
 
             int row_index = 2;
             Row row;
-            ArrayList<Prodotto> prodotti = catalogo.getProdotti();
+            List<Prodotto> prodotti = catalogo.getProdotti();
             
             for(Prodotto prodotto : prodotti) {
                 int ivato_index = 2;

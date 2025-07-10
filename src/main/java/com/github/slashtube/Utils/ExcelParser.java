@@ -40,7 +40,7 @@ public class ExcelParser {
             row = iterator.next();
 
             for(var cell : row) {
-                if(cell != null && cell.getCellType() == CellType.STRING && riemp < 4) {
+                if(cell != null && cell.getCellType() == CellType.STRING ) {
                     String value = cell.getStringCellValue().toLowerCase();
                     switch(value) {
                         case "ean":
