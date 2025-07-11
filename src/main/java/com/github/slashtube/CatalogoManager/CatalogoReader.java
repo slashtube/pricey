@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellReference;
 
+import com.github.slashtube.GUI.PriceyBar;
 import com.github.slashtube.ProdottoManager.Prodotto;
 import com.github.slashtube.ProdottoManager.ProdottoEntry;
 import com.github.slashtube.Utils.DirScanner;
@@ -28,6 +29,7 @@ public class CatalogoReader {
     }
 
     public void read() throws IOException {
+        PriceyBar.setStatus("Lettura file...");
         DirScanner scanner = new DirScanner();
         this.files = scanner.GetFiles();
 
@@ -93,6 +95,7 @@ public class CatalogoReader {
             }
         }
 
+        PriceyBar.increaseProgress();
     }
 
     public Catalogo getCatalogo() {

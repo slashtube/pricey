@@ -15,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFHyperlink;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.github.slashtube.GUI.PriceyBar;
 import com.github.slashtube.ProdottoManager.Prodotto;
 import com.github.slashtube.ProdottoManager.ProdottoEntry;
 
@@ -29,6 +30,7 @@ public class CatalogoWriter {
 
     public void write() throws IOException {
         try(FileOutputStream file = new FileOutputStream(path); XSSFWorkbook wb = new XSSFWorkbook()) {
+            PriceyBar.setStatus("Salvataggio File...");
             XSSFSheet foglio = wb.createSheet("Listino");
             
             setStyle(foglio, wb);
@@ -66,6 +68,8 @@ public class CatalogoWriter {
             foglio.autoSizeColumn(2);
          
             wb.write(file);
+
+            PriceyBar.increaseProgress();
         }
     }
 

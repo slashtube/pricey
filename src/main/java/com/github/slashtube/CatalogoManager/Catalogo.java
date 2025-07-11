@@ -3,6 +3,7 @@ package com.github.slashtube.CatalogoManager;
 import java.util.HashMap;
 import java.util.List;
 
+import com.github.slashtube.GUI.PriceyBar;
 import com.github.slashtube.ProdottoManager.OrdinaPerDescrizione;
 import com.github.slashtube.ProdottoManager.Prodotto;
 
@@ -25,6 +26,7 @@ public class Catalogo {
             .sorted(new OrdinaPerDescrizione())
             .toList();
 
+        PriceyBar.increaseProgress();
         return prodotti;
     } 
 
