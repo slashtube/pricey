@@ -6,22 +6,28 @@ import java.util.ArrayList;
 import org.apache.poi.ss.util.CellReference;
 
 public class Prodotto {
-    final private String barcode;
+    private String barcode;
     final private String descrizione;
     final private ArrayList<ProdottoEntry> entryList;
 
     public Prodotto(String barcode, String descrizione, ProdottoEntry entry) {
         this.entryList = new ArrayList<>();
-
         this.barcode = barcode;
         this.descrizione = descrizione;
-
         this.entryList.add(entry);
+    }
+
+    public void setNewBarcode(String newbarcode) {
+        this.barcode = newbarcode;
     }
 
 
     public String getBarcode() {
         return this.barcode;
+    }
+
+    public String getBarcodeAlias(String aliasPrefix) {
+        return this.barcode.startsWith(aliasPrefix) ? "Prodotto senza codice" : this.barcode;
     }
 
     public String getDescrizione() {

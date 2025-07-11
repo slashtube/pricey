@@ -8,11 +8,11 @@ import java.util.List;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFHyperlink;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.github.slashtube.GUI.PriceyBar;
@@ -31,7 +31,7 @@ public class CatalogoWriter {
     public void write() throws IOException {
         try(FileOutputStream file = new FileOutputStream(path); XSSFWorkbook wb = new XSSFWorkbook()) {
             PriceyBar.setStatus("Salvataggio File...");
-            XSSFSheet foglio = wb.createSheet("Listino");
+            Sheet foglio = wb.createSheet("Listino");
             
             setStyle(foglio, wb);
             createHeader(foglio);
@@ -46,12 +46,8 @@ public class CatalogoWriter {
                 prodotto.SortEntries();
                 
                 row = foglio.createRow(row_index++);
-                if(barcode.contains("N")) {
-                    row.createCell(0).setCellValue("Prodotto senza codice");
-                } else {
-                    row.createCell(0).setCellValue(barcode);
-                }
 
+                row.createCell(0).setCellValue(barcode);
                 row.createCell(1).setCellValue(prodotto.getDescrizione());
 
                 for(ProdottoEntry entry : prodotto.getEntryList()) {
@@ -73,7 +69,7 @@ public class CatalogoWriter {
         }
     }
 
-    private void setStyle(XSSFSheet foglio, XSSFWorkbook wb) {
+    private void setStyle(Sheet foglio, XSSFWorkbook wb) {
             // Definizione font
             XSSFFont font = ((XSSFWorkbook) wb).createFont();
             font.setFontHeightInPoints((short) 16);
@@ -92,14 +88,12 @@ public class CatalogoWriter {
         
     }
 
-    private void createHeader(XSSFSheet foglio) {
+    private void createHeader(Sheet foglio) {
         Row row = foglio.createRow(0);
         row.createCell(0).setCellValue("EAN");
         row.createCell(1).setCellValue("Descrizione");
         row.createCell(2).setCellValue("Ivato Minimo");
 
-        // Crea una riga vuota per fare spazio
-        foglio.createRow(1);
         
     }
 

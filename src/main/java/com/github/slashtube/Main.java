@@ -2,15 +2,16 @@ package com.github.slashtube;
 
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import com.github.slashtube.CatalogoManager.CatalogoReader;
 import com.github.slashtube.CatalogoManager.CatalogoWriter;
 import com.github.slashtube.GUI.PriceyBar;
 
 public class Main {
     public static void main(String[] args) {
-        long startTime = System.currentTimeMillis();
-
         try {
+            long startTime = System.currentTimeMillis();
             PriceyBar.CreateProgressBar(0, 3);
             CatalogoReader reader = new CatalogoReader();
             reader.read();
@@ -24,11 +25,8 @@ public class Main {
 
             
         } catch (IOException e) {
-            e.getStackTrace();
-        }
-
-
-
+            JOptionPane.showMessageDialog(null, "Errore nell'apertura/scrittura dei file", "Errore", JOptionPane.ERROR_MESSAGE);
+        } 
 
     }
 

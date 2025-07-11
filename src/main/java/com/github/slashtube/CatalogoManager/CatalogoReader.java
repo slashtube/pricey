@@ -40,7 +40,7 @@ public class CatalogoReader {
         Sheet foglio;
         int nocode = 0;
 
-        HashMap<String, Prodotto> list = this.catalogo.getList();
+        HashMap<String, Prodotto> catalog = this.catalogo.getList();
 
         for (File file : this.files) {
             // Lettura dati parser
@@ -64,9 +64,6 @@ public class CatalogoReader {
                             break;
                         case CellType.STRING:
                             barcode = row.getCell(indexes[0]).getStringCellValue();
-                            if(barcode.equals(".") || barcode.equals("-")) {
-                                barcode = String.format("N%d", nocode++);
-                            }
                             break;
                         default:
                             barcode = null;
@@ -80,12 +77,21 @@ public class CatalogoReader {
                         Cell cell = row.getCell(indexes[2]);
                         ivato = cell.getNumericCellValue();
 
-                        if (list.containsKey(barcode)) {
-                            list.get(barcode).AddEntry(file, ivato, new CellReference(cell));
+                        if (catalog.containsKey(barcode)) {
+                            catalog.get(barcode).AddEntry(file, ivato, new CellReference(cell));
                         } else {
                             ProdottoEntry entry = new ProdottoEntry(file, ivato, new CellReference(cell));
                             Prodotto p = new Prodotto(barcode, descrizione, entry);
-                            list.put(barcode, p);
+
+                            if(barcode.equals("-") || barcode.equals(".")) {
+                                barcode = "Prodotto senza codice";
+                                p.setNewBarcode(barcode);
+                                catalog.put(barcode + nocode++, p);
+                           } else {
+                                catalog.put(barcode, p);
+                           }
+
+
                         }
                     }
 
