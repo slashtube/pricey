@@ -57,13 +57,13 @@ public class CatalogoReader {
 
             while (row != null) {
                 // Lettura barcode
-                if (row.getCell(indexes[0]) != null) {
-                    switch (row.getCell(indexes[0]).getCellType()) {
+                if (row.getCell(indexes[ExcelParser.IndexValue.BARCODE.ordinal()]) != null) {
+                    switch (row.getCell(indexes[ExcelParser.IndexValue.BARCODE.ordinal()]).getCellType()) {
                         case CellType.NUMERIC:
-                            barcode = String.format("%.0f", row.getCell(indexes[0]).getNumericCellValue());
+                            barcode = String.format("%.0f", row.getCell(indexes[ExcelParser.IndexValue.BARCODE.ordinal()]).getNumericCellValue());
                             break;
                         case CellType.STRING:
-                            barcode = row.getCell(indexes[0]).getStringCellValue();
+                            barcode = row.getCell(indexes[ExcelParser.IndexValue.BARCODE.ordinal()]).getStringCellValue();
                             break;
                         default:
                             barcode = null;
@@ -71,10 +71,10 @@ public class CatalogoReader {
 
                     if (barcode != null) {
                         // Lettura descrizione
-                        descrizione = row.getCell(indexes[1]).getStringCellValue();
+                        descrizione = row.getCell(indexes[ExcelParser.IndexValue.DESCRIZIONE.ordinal()]).getStringCellValue();
 
                         // lettura ivato
-                        Cell cell = row.getCell(indexes[2]);
+                        Cell cell = row.getCell(indexes[ExcelParser.IndexValue.IVATO.ordinal()]);
                         ivato = cell.getNumericCellValue();
 
                         if (catalog.containsKey(barcode)) {

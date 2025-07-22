@@ -8,20 +8,20 @@ import com.github.slashtube.ProdottoManager.OrdinaPerDescrizione;
 import com.github.slashtube.ProdottoManager.Prodotto;
 
 public class Catalogo {
-    final private HashMap<String, Prodotto> list;
+    final private HashMap<String, Prodotto> map;
 
     public Catalogo() {
-        this.list = new HashMap<>();
+        this.map = new HashMap<>();
     }
 
     public HashMap<String, Prodotto> getList() {
-        return this.list;
+        return this.map;
     }
 
     public List<Prodotto> getProdotti() {
         List<Prodotto> prodotti;
 
-        prodotti = list.entrySet().stream()
+        prodotti = map.entrySet().stream()
             .map(kv -> kv.getValue())
             .sorted(new OrdinaPerDescrizione())
             .toList();

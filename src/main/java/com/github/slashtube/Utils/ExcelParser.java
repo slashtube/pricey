@@ -19,6 +19,12 @@ public class ExcelParser {
     private Sheet foglio;
     private int startrow;
 
+    public enum IndexValue  {
+        BARCODE,
+        DESCRIZIONE,
+        IVATO,
+    };
+
     public ExcelParser() {
         this.indexes = new int[3];
         this.foglio = null;
@@ -46,11 +52,11 @@ public class ExcelParser {
                         case "ean":
                         case "barcode":
                         case "codice ean":
-                            this.indexes[0] = cell.getColumnIndex();
+                            this.indexes[IndexValue.BARCODE.ordinal()] = cell.getColumnIndex();
                             riemp++;
                             break;
                         case "descrizione":
-                            this.indexes[1] = cell.getColumnIndex();
+                            this.indexes[IndexValue.DESCRIZIONE.ordinal()] = cell.getColumnIndex();
                             riemp++;
                             break;
                         // Se rileva piu' di un ivato copia solo la sua prima occorrenza
@@ -61,7 +67,7 @@ public class ExcelParser {
                         // Sovrascrive ivato trovato in precedenza se rileva un prezzo scontato
                         case "prezzo offerta":
                         case "ivato sc.":
-                            this.indexes[2] = cell.getColumnIndex();
+                            this.indexes[IndexValue.IVATO.ordinal()] = cell.getColumnIndex();
                             riemp++;
                             occ++;
                             break;
@@ -74,8 +80,8 @@ public class ExcelParser {
 
             // Se dopo una iterazione trova 2 elementi su 3 molto probabilmente il barcode avra' come nome "codice"
             if(riemp >= 2) {
-                if(this.indexes[0] <= 0) {
-                    this.indexes[0] = alt_barcode;
+                if(this.indexes[IndexValue.BARCODE.ordinal()] <= 0) {
+                    this.indexes[IndexValue.BARCODE.ordinal()] = alt_barcode;
                     riemp++;
                 } 
                 this.startrow = row.getRowNum();

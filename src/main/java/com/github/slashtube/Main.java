@@ -11,8 +11,10 @@ import com.github.slashtube.GUI.PriceyBar;
 public class Main {
     public static void main(String[] args) {
         try {
+            final short MAX_PROGRESS_VALUE = 3;
             long startTime = System.currentTimeMillis();
-            PriceyBar.CreateProgressBar(0, 3);
+
+            PriceyBar.CreateProgressBar(0, MAX_PROGRESS_VALUE);
             CatalogoReader reader = new CatalogoReader();
             reader.read();
 
