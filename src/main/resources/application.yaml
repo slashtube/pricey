@@ -9,4 +9,8 @@ spring:
   servlet:
     multipart:
       enabled: true
+  sql:
+    init:
+      schema-locations:
+      - classpath:schema.sql
   

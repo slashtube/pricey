@@ -9,6 +9,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import com.slashtube.pricey.Service.CatalogReaderService;
+import com.slashtube.pricey.Service.FileScannerService;
+import com.slashtube.pricey.Service.ParserService;
+
 @RestController
 public class PriceyController {
+    @Autowired
+    private ParserService parserservice;
+    @Autowired
+    private FileScannerService fileScannerService;
+    @Autowired
+
     final String path;
 
     public PriceyController() {
@@ -40,11 +51,32 @@ public class PriceyController {
             return ResponseEntity.internalServerError().body("Error");
         }
         
-        return ResponseEntity.ok("200 OK");
+        return ResponseEntity.ok("Successfully uploaded files");
     };
 
     @GetMapping(value = "/catalog", produces = "application/zip")
     public ResponseEntity<StreamingResponseBody> getCatalog() {
+
+        // Read Files
+        final File[] files = fileScannerService.getFileList();
+
+        // Parse catalogs
+        for (File file : files) {
+            try {
+                parserservice.parse(file);
+
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+
+            // Store products in database
+        }
+
+
+        // Create ordered catalog
+
+
+        // Return catalog
         return ResponseEntity
             .ok()
             .header("Content-Disposition", "attachment; filename=\"Listino.zip\"")
