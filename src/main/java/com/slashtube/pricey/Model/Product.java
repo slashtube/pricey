@@ -20,7 +20,7 @@ public class Product {
     @Getter
     private String description;
 
-    @OneToMany(mappedBy = "barcode")
+    @OneToMany(mappedBy = "product")
     Set<Entry> entries;
     
 }

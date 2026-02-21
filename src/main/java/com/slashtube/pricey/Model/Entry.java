@@ -18,12 +18,12 @@ public class Entry {
     @ManyToOne
     @MapsId("EAN")
     @JoinColumn(name="EAN")
-    private String barcode;
+    private Product product;
 
     @ManyToOne
     @MapsId("File")
     @JoinColumn(name="File")
-    private String filename;
+    private Catalog catalog;
     
     @Getter
     private float price;

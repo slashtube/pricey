@@ -20,7 +20,7 @@ public class Catalog {
     @Getter
     private String name;
 
-    @OneToMany(mappedBy = "filename")
+    @OneToMany(mappedBy = "catalog")
     Set<Entry> entries;
 
     

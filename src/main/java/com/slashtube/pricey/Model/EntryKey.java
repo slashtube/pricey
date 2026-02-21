@@ -11,6 +11,6 @@ public class EntryKey implements Serializable{
     private String EAN;
 
     @Column(name = "File")
-    private String file;
+    private String File;
     
 }
