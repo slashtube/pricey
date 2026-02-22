@@ -11,6 +11,5 @@ spring:
       enabled: true
   sql:
     init:
-      schema-locations:
-      - classpath:schema.sql
+      mode: always
   

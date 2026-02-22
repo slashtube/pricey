@@ -11,28 +11,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.stereotype.Service;
 
+import com.slashtube.pricey.Model.ExcelData;
+
 import lombok.Getter;
 
 @Service
 public class ParserService {
     @Getter
-    final private int [] indexes;
-    @Getter
-    private Sheet foglio;
-    @Getter
-    private int startrow;
-
-    private enum IndexValue  {
-        BARCODE,
-        DESCRIZIONE,
-        IVATO,
-    };
-
-    public ParserService() {
-        this.indexes = new int[3];
-        this.foglio = null;
-        this.startrow = 0;
-    }
+    ExcelData excelData;
 
     public void parse(File file) throws IOException {
         Workbook wb = WorkbookFactory.create(file);
@@ -40,7 +26,12 @@ public class ParserService {
         int occ = 0;
         int alt_barcode = 0; // If no barcode field was found, fallbacks to this value
 
-        this.foglio = wb.getSheetAt(0);
+        int [] indexes = new int[3];
+        Sheet foglio = null;
+        int startrow = 0;
+
+
+        foglio = wb.getSheetAt(0);
 
         Iterator<Row> iterator = foglio.iterator();
         Row row;
@@ -55,11 +46,11 @@ public class ParserService {
                         case "ean":
                         case "barcode":
                         case "codice ean":
-                            this.indexes[IndexValue.BARCODE.ordinal()] = cell.getColumnIndex();
+                            indexes[ExcelData.IndexValue.BARCODE.ordinal()] = cell.getColumnIndex();
                             riemp++;
                             break;
                         case "descrizione":
-                            this.indexes[IndexValue.DESCRIZIONE.ordinal()] = cell.getColumnIndex();
+                            indexes[ExcelData.IndexValue.DESCRIZIONE.ordinal()] = cell.getColumnIndex();
                             riemp++;
                             break;
                         // considers only the first occurence of 'ivato'
@@ -70,7 +61,7 @@ public class ParserService {
                         // overwrites the 'ivato' field if it finds a sale offer
                         case "prezzo offerta":
                         case "ivato sc.":
-                            this.indexes[IndexValue.IVATO.ordinal()] = cell.getColumnIndex();
+                            indexes[ExcelData.IndexValue.IVATO.ordinal()] = cell.getColumnIndex();
                             riemp++;
                             occ++;
                             break;
@@ -83,13 +74,15 @@ public class ParserService {
 
             // If no 'ean', 'barcode' or 'codice ean' was found fallbacks to the alt_barcode
             if(riemp >= 2) {
-                if(this.indexes[IndexValue.BARCODE.ordinal()] <= 0) {
-                    this.indexes[IndexValue.BARCODE.ordinal()] = alt_barcode;
+                if(indexes[ExcelData.IndexValue.BARCODE.ordinal()] <= 0) {
+                    indexes[ExcelData.IndexValue.BARCODE.ordinal()] = alt_barcode;
                     riemp++;
                 } 
-                this.startrow = row.getRowNum();
+                startrow = row.getRowNum();
             }
         }
+
+        this.excelData = new ExcelData(indexes, foglio, startrow, file);
     }
     
 }

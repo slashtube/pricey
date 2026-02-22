@@ -1,14 +1,11 @@
 package com.slashtube.pricey.Controller;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +16,31 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import com.slashtube.pricey.Model.Catalog;
+import com.slashtube.pricey.Model.ExcelData;
+import com.slashtube.pricey.Repo.CatalogRepo;
+import com.slashtube.pricey.Service.AddToZipService;
 import com.slashtube.pricey.Service.CatalogReaderService;
 import com.slashtube.pricey.Service.FileScannerService;
 import com.slashtube.pricey.Service.ParserService;
+
 
 @RestController
 public class PriceyController {
     @Autowired
     private ParserService parserservice;
+
     @Autowired
     private FileScannerService fileScannerService;
+
     @Autowired
+    private CatalogReaderService catalogReaderService;
+
+    @Autowired
+    private AddToZipService addToZipService; 
+
+    @Autowired
+    private CatalogRepo catalogRepo;
 
     final String path;
 
@@ -39,12 +50,15 @@ public class PriceyController {
 
     
     @PostMapping(value = "/send", consumes= {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> sendFiles(@RequestParam("file") MultipartFile entity) {
+    public ResponseEntity<String> sendFiles(@RequestParam("file") MultipartFile file) {
         // File path
-        final String upload_path = this.path + entity.getOriginalFilename();
+        final String upload_path = this.path + file.getOriginalFilename();
+
+        Catalog catalog = new Catalog(file.getOriginalFilename());
+        catalogRepo.save(catalog);
 
         // Save File 
-        try(InputStream finput = entity.getInputStream(); FileOutputStream fout = new FileOutputStream(upload_path)) {
+        try(InputStream finput = file.getInputStream(); FileOutputStream fout = new FileOutputStream(upload_path)) {
             finput.transferTo(fout);
         }catch(IOException e) {
             e.printStackTrace();
@@ -54,27 +68,34 @@ public class PriceyController {
         return ResponseEntity.ok("Successfully uploaded files");
     };
 
-    @GetMapping(value = "/catalog", produces = "application/zip")
-    public ResponseEntity<StreamingResponseBody> getCatalog() {
-
+    @GetMapping(value = "sort")
+    public ResponseEntity<String> getMethodName() {
         // Read Files
         final File[] files = fileScannerService.getFileList();
 
-        // Parse catalogs
-        for (File file : files) {
-            try {
+        try {
+            for (File file : files) {
+                // Parse catalogs
                 parserservice.parse(file);
+                ExcelData excelData = parserservice.getExcelData();
 
-            } catch(IOException e) {
-                e.printStackTrace();
-            }
+                // Store products in database
+                catalogReaderService.read(excelData);
 
-            // Store products in database
+
+            }         
+            // Create ordered catalog
+
+        }catch(IOException e) {
+            e.printStackTrace();
         }
+        return ResponseEntity.ok("Successfully sorted files");
+    }
+    
 
-
-        // Create ordered catalog
-
+    @GetMapping(value = "/catalog", produces = "application/zip")
+    public ResponseEntity<StreamingResponseBody> getCatalog() {
+        this.addToZipService.setPath(this.path);
 
         // Return catalog
         return ResponseEntity
@@ -82,34 +103,8 @@ public class PriceyController {
             .header("Content-Disposition", "attachment; filename=\"Listino.zip\"")
             .body(out -> {
                 ZipOutputStream zipOutputStream = new ZipOutputStream(out);
-                addToZip(zipOutputStream);
+                addToZipService.add(zipOutputStream);
             });
-    }
-
-    private void addToZip(ZipOutputStream zipOutputStream) {
-        // Get files to add
-        final String[] filenames = new File(this.path).list();
-
-        try {
-            for(String filename : filenames) {
-                File file = new File(this.path + filename);
-                zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
-                FileInputStream fileInputStream = new FileInputStream(file);
-
-                IOUtils.copy(fileInputStream, zipOutputStream);
-
-                fileInputStream.close();
-                zipOutputStream.closeEntry();
-            }
-
-            zipOutputStream.finish();
-            zipOutputStream.flush();
-            IOUtils.closeQuietly(zipOutputStream);
-
-        }catch(IOException e) {
-            e.printStackTrace();
-        } 
-
     }
     
 }
