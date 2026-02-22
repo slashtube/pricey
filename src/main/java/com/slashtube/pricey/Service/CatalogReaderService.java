@@ -2,6 +2,8 @@ package com.slashtube.pricey.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -18,6 +20,7 @@ import com.slashtube.pricey.Model.Entry;
 import com.slashtube.pricey.Model.EntryKey;
 import com.slashtube.pricey.Model.ExcelData;
 import com.slashtube.pricey.Model.Product;
+import com.slashtube.pricey.Repo.CatalogRepo;
 import com.slashtube.pricey.Repo.EntryRepo;
 import com.slashtube.pricey.Repo.ProductRepo;
 
@@ -27,9 +30,11 @@ public class CatalogReaderService {
     private ProductRepo productRepo;
     @Autowired
     private EntryRepo entryRepo;
+    @Autowired
+    private CatalogRepo catalogRepo;
 
 
-    public void read(ExcelData excelData) {
+    public void read(ExcelData excelData) throws IOException {
         Sheet foglio;
         int[] indexes = excelData.getIndexes();
         int startrow = excelData.getStartrow() + 1;
@@ -64,6 +69,7 @@ public class CatalogReaderService {
                     if(EAN != null) {
                         // Description
                         description = row.getCell(indexes[ExcelData.IndexValue.DESCRIZIONE.ordinal()]).getStringCellValue();
+                        description = filterDescription(description);
 
                         // price
                         Cell cell = row.getCell(indexes[ExcelData.IndexValue.IVATO.ordinal()]);
@@ -72,13 +78,14 @@ public class CatalogReaderService {
                         // Insert into DB
                         EntryKey entryKey = new EntryKey(EAN, file);
                         Product product = new Product(EAN, description);
-                        Catalog catalog = new Catalog(file);
+                        Catalog catalog = catalogRepo.findById(file).get();
+                        String reference = cell.getAddress().formatAsString();
 
                         if(!productRepo.existsById(EAN)) {
                             products.add(product);
                         } 
 
-                        Entry entry = new Entry(entryKey,product,catalog, price);
+                        Entry entry = new Entry(entryKey,product,catalog, price, reference);
                         entries.add(entry);
 
                     }
@@ -90,10 +97,14 @@ public class CatalogReaderService {
             productRepo.saveAll(products);
             entryRepo.saveAll(entries);
 
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
+        } 
+    }
 
+    private String filterDescription(String description) {
+        Pattern pattern = Pattern.compile("^[., ]");
+        Matcher matcher = pattern.matcher(description);
+        
+        return matcher.replaceAll("");
     }
     
 }

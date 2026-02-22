@@ -4,13 +4,16 @@ import java.io.File;
 
 import org.springframework.stereotype.Service;
 
-@Service
-public class FileScannerService {
-    final String path;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    public FileScannerService() {
-        this.path = System.getProperty("user.dir") + "/files" + File.separator;
-    }
+@Service
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+public class FileScannerService {
+    String path;
 
     public File[] getFileList() {
         return (new File(this.path).listFiles());

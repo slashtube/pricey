@@ -17,11 +17,16 @@ public class Catalog {
     @Getter
     private String file;
 
+    @Getter
+    private String Origin;
+
+
     @OneToMany(mappedBy = "catalog")
     Set<Entry> entries;
 
-    public Catalog(String file) {
+    public Catalog(String file, String Origin) {
         this.file = file;
+        this.Origin = Origin;
     }
 
     

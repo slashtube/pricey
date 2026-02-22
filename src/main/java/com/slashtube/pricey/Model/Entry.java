@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "Entries")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class Entry {
     @EmbeddedId
-    @Getter
     private EntryKey key;
 
     @ManyToOne
@@ -29,8 +29,8 @@ public class Entry {
     @JoinColumn(name="File")
     private Catalog catalog;
 
-    @Getter
     private double price;
+    private String reference;
 
 
 
