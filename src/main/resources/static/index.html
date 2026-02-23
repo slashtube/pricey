@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="/bootstrap/css/bootstrap-italia.min.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    </head>
+
+    <body>
+        <div class="form-group mt-5 d-flex justify-content-center">
+            <div class="input-group w-75">
+                <label class="active" for="link-path">Link Path</label>
+                <input type="text" class="form-control " id="link-path" name="link-path">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button" id="submit">Imposta</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="container mt-5 ">
+            <div class="row row-cols-3 w-100 ">
+                <div class="col"></div>
+                <div class="col d-flex justify-content-center">
+                    <form method="post" action="" enctype="multipart/form-data" class="justify-content-center d-flex w-100 ">
+                        <input type="file" name="upload-manual" id="upload-manual" class="upload" multiple="multiple" />
+                        <label for="upload-manual" >
+                            <svg class="icon icon-sm" aria-hidden="true"><use href="bootstrap/svg/sprites.svg#it-upload"></use></svg>
+                            <span>Carica file</span>
+                        </label>
+                    </form> 
+                </div>
+                <div class="col"></div>
+            </div>
+
+            <div class="row row-cols-3 w-100 mt-5">
+                <div class="col"></div>
+                <div class="col d-flex justify-content-center">
+                    <ul class="upload-file-list" id="file-list">
+                    </ul>
+
+                </div>
+                <div class="col"></div>
+
+            </div>
+        </div>
+
+        <div class="m-5">
+            <button type="button" class="btn btn-secondary btn-icon float-end" id="download-button">
+                <span>Scarica Listino</span>
+                <svg class="icon icon-white ms-1"><use href="/bootstrap/svg/sprites.svg#it-download"></use></svg>
+            </button>
+        </div>
+
+
+        <div class="notification dismissable with-icon success " role="alert" id="notification-success">
+            <h2 class="h5 "><svg class="icon"><use href="/bootstrap/svg/sprites.svg#it-check-circle"></use></svg>Successo</h2>
+            <p id="message-success"></p>
+            <button type="button" class="btn notification-close" id="dismiss">
+                <svg class="icon"><use href="/bootstrap/svg/sprites.svg#it-close"></use></svg>
+            </button>
+        </div>
+
+        <div class="notification with-icon error dismissable" role="alert" id="notification-error">
+            <h2 class="h5 "><svg class="icon"><use href="/bootstrap/svg/sprites.svg#it-close-circle"></use></svg>Errore</h2>
+            <p id="message-error"></p>
+            <button type="button" class="btn notification-close" data-bs-dismiss="notification">
+                <svg class="icon"><use href="/bootstrap/svg/sprites.svg#it-close"></use></svg>
+            </button>
+        </div>
+
+        <div class="notification with-icon warning " role="alert" id="notification-warning">
+            <h2 class="h5 "><svg class="icon"><use href="/bootstrap/svg/sprites.svg#it-error"></use></svg>Attenzione</h2>
+            <p id="message-warning"></p>
+        </div>
+
+        <!-- Sample Item -->
+        <li id="item" class="upload-file success d-none">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="/bootstrap/svg/sprites.svg#it-file"></use></svg>
+            <p></p>
+            <button disabled>
+                <svg class="icon" aria-hidden="true"><use href="/bootstrap/svg/sprites.svg#it-check"></use></svg>
+            </button>
+        </li>
+
+
+
+        <script src="download.js"></script>
+        <script src="list.js" defer></script>
+        <script src="/bootstrap/js/bootstrap-italia.bundle.min.js"></script>
+    </body>
+</html>
