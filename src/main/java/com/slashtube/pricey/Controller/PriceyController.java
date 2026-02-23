@@ -20,6 +20,8 @@ import com.slashtube.pricey.Model.Catalog;
 import com.slashtube.pricey.Model.ExcelData;
 import com.slashtube.pricey.Repo.CatalogRepo;
 import com.slashtube.pricey.Service.*;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
@@ -38,26 +40,38 @@ public class PriceyController {
     private CatalogWriterService catalogWriterService;
 
     @Autowired
+    private CleanupService cleanupService;
+
+    @Autowired
     private AddToZipService addToZipService; 
 
     @Autowired
     private CatalogRepo catalogRepo;
 
     final String path;
+    String origin;
 
     public PriceyController() {
-        this.path = System.getProperty("user.dir") + "/Listino" + File.separator;
+        this.path = System.getProperty("user.dir") + File.separator;
+        this.origin = "";
     }
+
+    @PostMapping("/sendOrigin")
+    public ResponseEntity<String> sendOrigin(@RequestBody String origin) {
+        this.origin = origin;
+        
+        return ResponseEntity.ok("Origine letta con successo");
+    }
+    
 
     
     @PostMapping(value = "/send", consumes= {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> sendFiles(@RequestParam("file") MultipartFile[] files, @RequestParam("origin") String[] Origin) {
-        int i = 0;
+    public ResponseEntity<String> sendFiles(@RequestParam("file") MultipartFile[] files) {
         for (MultipartFile file : files) {
             // File path
-            final String upload_path = this.path + file.getOriginalFilename();
+            final String upload_path = this.path + "files/" + file.getOriginalFilename();
 
-            Catalog catalog = new Catalog(file.getOriginalFilename(), Origin[i]);
+            Catalog catalog = new Catalog(file.getOriginalFilename(), this.origin + file.getOriginalFilename());
             catalogRepo.save(catalog);
 
             // Save File 
@@ -67,7 +81,6 @@ public class PriceyController {
                 e.printStackTrace();
                 return ResponseEntity.internalServerError().body("Error");
             }
-            i++;
         }
         
         return ResponseEntity.ok("Successfully uploaded files");
@@ -76,7 +89,7 @@ public class PriceyController {
     @GetMapping(value = "sort")
     public ResponseEntity<String> getMethodName() {
         // Read Files
-        fileScannerService.setPath(this.path);
+        fileScannerService.setPath(this.path + "files/");
         final File[] files = fileScannerService.getFileList();
 
         try {
@@ -91,7 +104,7 @@ public class PriceyController {
 
             }         
             // Create ordered catalog
-            catalogWriterService.setPath(this.path);
+            catalogWriterService.setPath(this.path + "Listino/");
             catalogWriterService.write();
 
         }catch(IOException e) {
@@ -106,7 +119,10 @@ public class PriceyController {
 
     @GetMapping(value = "/catalog", produces = "application/zip")
     public ResponseEntity<StreamingResponseBody> getCatalog() {
-        this.addToZipService.setPath(this.path);
+        cleanupService.setPath(this.path + "files/");
+        cleanupService.cleanup();
+
+        this.addToZipService.setPath(this.path + "Listino/");
 
         // Return catalog
         return ResponseEntity
