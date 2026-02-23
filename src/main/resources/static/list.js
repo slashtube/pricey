@@ -105,7 +105,7 @@ function addListItem(file) {
     filename = item.children[1];
     filename.innerText = file.name;
 
-    item.classList.toggle("d-none");
+    item.classList.remove("d-none");
 
     List.appendChild(item);
 
