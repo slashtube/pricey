@@ -23,7 +23,7 @@ download_button.addEventListener('click', handle_download);
 submit_button.addEventListener('click', handle_origin);
 
 async function handle_origin() {
-    const origin_url = 'http://localhost:8080/sendOrigin';
+    const origin_url = '/sendOrigin';
     const origin = document.getElementById("link-path").value;
 
     const response = await fetch(origin_url, {
@@ -41,7 +41,7 @@ async function handle_origin() {
 }
 
 async function handle_send(event) {
-    const url = 'http://localhost:8080/send';
+    const url = '/send';
     const formData = new FormData();
     for(const file of event.target.files) {
         formData.append('file', file);
@@ -67,7 +67,7 @@ async function handle_send(event) {
 }
 
 async function handle_sort() {
-    const sort_url = 'http://localhost:8080/sort';
+    const sort_url = '/sort';
 
     const response = await fetch(sort_url, {
         method: 'GET'
@@ -76,7 +76,7 @@ async function handle_sort() {
 }
 
 async function handle_download() {
-    const download_url = 'http://localhost:8080/catalog';
+    const download_url = '/catalog';
 
     message_warning.innerText = "Operazione in corso, attendere...";
     notification_warning.style.display = "block";
