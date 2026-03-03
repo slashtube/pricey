@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.slashtube</groupId>
 	<artifactId>pricey</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>2.0</version>
 	<name>pricey</name>
 	<description>Comparatore di prezzi per prodotti letti da file excel</description>
 	<url/>
@@ -101,6 +101,16 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+    			<groupId>com.google.cloud.tools</groupId>
+    			<artifactId>jib-maven-plugin</artifactId>
+    			<version>3.5.1</version>
+				<configuration>
+					<to>
+						<image>slashtube/pricey-jib</image>
+					</to>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -21,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.slashtube.pricey.Model.Entry;
+import com.slashtube.pricey.Model.Product;
 import com.slashtube.pricey.Repo.EntryRepo;
+import com.slashtube.pricey.Repo.ProductRepo;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,8 +37,11 @@ public class CatalogWriterService {
     @Autowired
     private EntryRepo entryRepo;
 
+    @Autowired
+    private ProductRepo productRepo;
+
     public void write() throws IOException {
-        ArrayList<Entry> entries = (ArrayList<Entry>) entryRepo.findEntryWithDescription();
+        ArrayList<Product> products = (ArrayList<Product>) productRepo.findEntryProducts();
 
         XSSFWorkbook xwb = new XSSFWorkbook();
 
@@ -45,7 +50,7 @@ public class CatalogWriterService {
         sheet.trackAllColumnsForAutoSizing();
 
         wb.setCompressTempFiles(true);
-        sheet.setRandomAccessWindowSize(100);
+        sheet.setRandomAccessWindowSize(5);
 
 
         // Set Styles
@@ -54,16 +59,16 @@ public class CatalogWriterService {
 
         int row_count = 2;
 
-        Iterator<Entry> itr = entries.iterator();
+        Iterator<Product> itr = products.iterator();
 
         while(itr.hasNext()) {
             int price_col = 2;
-            Entry entry = (Entry) itr.next();
-            ArrayList<Entry> entryList = (ArrayList<Entry>) entryRepo.findEntryByEAN(entry.getKey().getEAN());
+            Product product = (Product) itr.next();
+            ArrayList<Entry> entryList = (ArrayList<Entry>) entryRepo.findEntryByEAN(product.getEAN());
             SXSSFRow row =  sheet.createRow(row_count++);
 
-            row.createCell(0).setCellValue(entry.getKey().getEAN());
-            row.createCell(1).setCellValue(entry.getProduct().getDescription());
+            row.createCell(0).setCellValue(product.getEAN());
+            row.createCell(1).setCellValue(product.getDescription());
             Iterator<Entry> entryitr = entryList.iterator();
             while(entryitr.hasNext()) {
                 Entry e = entryitr.next();
