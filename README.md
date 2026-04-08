@@ -39,4 +39,29 @@ The catalog will have all the products with their relative prices in ascending o
 Note: the link won't work if the set path is not valid.
 
 ### E-R Database
-![E-R](img/pricey-er.png "E-R diagram")
+```mermaid
+---
+title: Pricey - Catalog Manager
+---
+erDiagram
+	direction TB
+	PRODUCT {
+		string EAN PK "Product barcode"  
+		string Description  "Product Name/Description"  
+	}
+
+	CATALOG {
+		string file PK "Catalog excel file"
+		string origin  "Catalog relative path, / is default"    
+	}
+
+    ENTRY {
+        string EAN PK,FK
+        string file PK,FK
+        double price
+		string reference "Product cell position in catalog"
+    }
+
+    PRODUCT }|--|{ ENTRY : has
+    CATALOG }|--|{ ENTRY : references
+```
