@@ -39,4 +39,4 @@ The catalog will have all the products with their relative prices in ascending o
 Note: the link won't work if the set path is not valid.
 
 ### E-R Database
-![E-R](img/pricey-er "E-R diagram")
+![E-R](img/pricey-er.png "E-R diagram")
