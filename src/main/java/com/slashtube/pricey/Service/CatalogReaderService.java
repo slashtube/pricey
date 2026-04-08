@@ -45,6 +45,7 @@ public class CatalogReaderService {
         double price;
         ArrayList<Product> products = new ArrayList<Product>();
         ArrayList<Entry> entries = new ArrayList<Entry>();
+
             
 
         try(Workbook wb = WorkbookFactory.create(excelData.getFile())) {
@@ -66,20 +67,20 @@ public class CatalogReaderService {
                             EAN = null;
                     }
 
-                    if(EAN != null) {
+                    Cell priceCell = row.getCell(indexes[ExcelData.IndexValue.IVATO.ordinal()]);
+                    if(EAN != null && !EAN.matches(".*[a-zA-Z]+.*") && priceCell.getCellType() != CellType.STRING) {
                         // Description
                         description = row.getCell(indexes[ExcelData.IndexValue.DESCRIZIONE.ordinal()]).getStringCellValue();
                         description = filterDescription(description);
 
                         // price
-                        Cell cell = row.getCell(indexes[ExcelData.IndexValue.IVATO.ordinal()]);
-                        price = cell.getNumericCellValue();
+                        price = priceCell.getNumericCellValue();
 
                         // Insert into DB
                         EntryKey entryKey = new EntryKey(EAN, file);
                         Product product = new Product(EAN, description);
                         Catalog catalog = catalogRepo.findById(file).get();
-                        String reference = cell.getAddress().formatAsString();
+                        String reference = priceCell.getAddress().formatAsString();
 
                         if(!productRepo.existsById(EAN)) {
                             products.add(product);
