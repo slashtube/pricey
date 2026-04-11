@@ -41,7 +41,7 @@ Note: the link won't work if the set path is not valid.
 ### E-R Database
 ```mermaid
 ---
-title: Pricey - Catalog Manager
+title: Pricey - Price Comparator
 ---
 erDiagram
 	direction TB
