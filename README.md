@@ -1,25 +1,4 @@
 # Pricey
-
-### IT-it
-Pricey e' un comparatore di prezzi letti da file excel.
-
-Il comparatore e' stato realizzato per un'attivita' commerciale, dunque, i file excel non sono seguono uno standard. Pertanto,
-il codice e' stato sviluppato per adattarsi al formato di determinati file.     
-Il risultato e' che il comparatore con molta probabilita'
-non sara' in grado di adattarsi a file excel che presentano una struttura diversa da quelli gia' testati.
-
-L'applicazione fu sviluppata inizialmente in pure Java e successivamente con il framework Spring.
-
-Mette a disposizione sull'indirizzo ``localhost:8080`` una pagina web interattiva con il quale e' possibile utilizzare lo strumento, in particolare:
-- Scegliere la posizione relativa o assoluta dei file excel (di default e' la cartella in cui e' presente il listino finale).
-- Caricare uno o piu' file excel contemporaneamente.
-- Scaricare un file zip contenente il listino ordinato.
-
-Il listino conterra' tutti i prodotti con i relativi prezzi ordinati in senso crescente. Inoltre, il prezzo di ogni prodotto sara' linkato al file in cui e' stato rilevato.
-
-Nota: il link non funzionera' correttamente se la posizione del file non e' stata impostata correttamente.
-
-### EN-en
 Pricey compares prices read from excel files.
 
 The comparator has been created for a commercial activity, also, the excel files do not follow a standard. Thus, the code was developed to adapt to the 
@@ -38,7 +17,30 @@ The catalog will have all the products with their relative prices in ascending o
 
 Note: the link won't work if the set path is not valid.
 
-### E-R Database
+## Database Setup
+Pricey runs mariaDB as DBMS. Before building the code and launching you should create a database and a user.
+```sql
+CREATE DATABASE 'PriceyDB';
+CREATE USER 'pricey'@'localhost' IDENTIFIED BY 'YOUR-PASSWORD';
+GRANT ALL PRIVILEGES ON 'PriceyDB'.* TO 'pricey'@'localhost';
+FLUSH PRIVILEGES;
+```
+Next, edit the username and password fields of the resources/application.yaml file to match the ones you've just created.
+
+## Usage
+Go in the project root folder open a terminal and type `mvn package`, you will find your jar file in the target folder.  
+
+
+Create the files and Listino folders (yes i know, it should do this automatically but i'm lazy) and then launch the application.
+
+```console
+mvn package
+cd target
+mkdir files Listino
+java -jar pricey-2.x.jar
+```
+
+## E-R Database
 ```mermaid
 ---
 title: Pricey - Price Comparator
